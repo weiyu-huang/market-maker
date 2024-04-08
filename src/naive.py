@@ -17,21 +17,26 @@ def main():
     df2['bid0'] = round(df2.midpoint * (1 + df2.bids_distance_0), 2)
     df2['ask0'] = round(df2.midpoint * (1 + df2.asks_distance_0), 2)
 
-    initial_cash = 10000
-    delta = 20
-    quantity = 0.01
+    initial_cash = 100000
+    delta = 40
+    quantity = 0.05
     target = 0.1
     exchange = Exchange(initial_cash=initial_cash)
 
     assets, cashes = [], []
+    exchange.place_order('BUY', 56000, 0.15)
+    exchange.place_order('SELL', 60000, 0.05)
+    exchange.place_order('SELL', 61000, 0.05)
+    exchange.place_order('SELL', 62000, 0.05)
     for row in df2.itertuples(index=False):
         time = getattr(row, 'system_time')
         bid0, ask0, mid_price = getattr(row, 'bid0'), getattr(row, 'ask0'), getattr(row, 'midpoint')
 
-        if exchange.asset < target:
-            exchange.place_order('BUY', mid_price - delta, quantity)
-        else:
-            exchange.place_order('SELL', mid_price + delta, quantity)
+        # if exchange.asset < target:
+        #     exchange.place_order('BUY', mid_price - delta, quantity)
+        # else:
+        #     exchange.place_order('SELL', mid_price + delta, quantity)
+
         asset, cash = exchange.simulate_latest_data(time, bid0, ask0)
         assets.append(asset)
         cashes.append(cash)
